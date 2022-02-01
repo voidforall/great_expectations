@@ -105,7 +105,7 @@ stages:
           name: aws_authkey
           displayName: 'Download AWS Credentials'
           inputs:
-              secureFile: 'aws_config'
+              secureFile: 'aws_config_sandbox'
               retryCount: '2'
 
         - script: |
