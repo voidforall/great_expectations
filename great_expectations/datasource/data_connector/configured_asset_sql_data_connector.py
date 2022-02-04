@@ -1,3 +1,4 @@
+import logging
 from copy import deepcopy
 from typing import Dict, List, Optional, cast
 
@@ -16,6 +17,9 @@ from great_expectations.execution_engine import (
     ExecutionEngine,
     SqlAlchemyExecutionEngine,
 )
+
+logger = logging.getLogger(__name__)
+
 
 try:
     import sqlalchemy as sa
@@ -273,7 +277,8 @@ class ConfiguredAssetSqlDataConnector(DataConnector):
     ):
         """Split using the values in the named column"""
         # query = f"SELECT DISTINCT(\"{self.column_name}\") FROM {self.table_name}"
-
+        logger.warning(f"split_on_column_value_running for sure")
+        # raise RuntimeError("hello hello hello I am here")
         return (
             sa.select([sa.func.distinct(sa.column(column_name))])
             .select_from(sa.text(table_name))

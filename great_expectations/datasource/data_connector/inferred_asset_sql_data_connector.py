@@ -166,6 +166,7 @@ class InferredAssetSqlDataConnector(ConfiguredAssetSqlDataConnector):
                 "type": metadata["type"],
             }
             if not splitter_method is None:
+                # this would have to happen :
                 data_asset_config["splitter_method"] = splitter_method
             if not splitter_kwargs is None:
                 data_asset_config["splitter_kwargs"] = splitter_kwargs

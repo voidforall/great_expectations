@@ -874,7 +874,7 @@ class SqlAlchemyExecutionEngine(ExecutionEngine):
         self, table_name: str, column_name: str, batch_identifiers: dict
     ) -> bool:
         """Split using the values in the named column"""
-
+        logger.warning(f"batch_identifier: {batch_identifiers}")
         return sa.column(column_name) == batch_identifiers[column_name]
 
     def _split_on_converted_datetime(
@@ -990,6 +990,7 @@ class SqlAlchemyExecutionEngine(ExecutionEngine):
 
         else:
             split_clause = True
+        # raise RuntimeError(batch_spec)
 
         if "sampling_method" in batch_spec:
             if batch_spec["sampling_method"] == "_sample_using_limit":
@@ -1025,6 +1026,9 @@ class SqlAlchemyExecutionEngine(ExecutionEngine):
                         .limit(batch_spec["sampling_kwargs"]["n"])
                     )
             elif batch_spec["sampling_method"] == "_sample_using_random":
+                logger.warning(f"_sample_using_random for sure")
+                # raise RuntimeError("hello hello hello I am here too")
+
                 num_rows: int = self.engine.execute(
                     sa.select([sa.func.count()])
                     .select_from(
