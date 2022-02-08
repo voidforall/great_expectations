@@ -4,7 +4,7 @@ import logging
 from ruamel.yaml import YAML, yaml_object
 
 logger = logging.getLogger(__name__)
-yaml = YAML()
+yaml = YAML(typ="safe")
 
 
 @yaml_object(yaml)

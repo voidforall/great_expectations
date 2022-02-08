@@ -17,7 +17,7 @@ from great_expectations.datasource.data_connector import (
 )
 from great_expectations.execution_engine import PandasExecutionEngine
 
-yaml = YAML()
+yaml = YAML(typ="safe")
 
 
 @pytest.fixture

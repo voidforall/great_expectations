@@ -31,7 +31,7 @@ try:
 except ImportError:
     SQLAlchemyError = RuntimeError
 
-yaml = YAML()
+yaml = YAML(typ="safe")
 yaml.indent(mapping=2, sequence=4, offset=2)
 
 

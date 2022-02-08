@@ -49,7 +49,7 @@ Use this notebook to configure a new Checkpoint and add it to your project:
 import great_expectations as ge
 from pprint import pprint
 
-yaml = YAML()
+yaml = YAML(typ="safe")
 context = ge.get_context()
 """,
             lint=True,

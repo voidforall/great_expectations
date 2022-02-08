@@ -14,7 +14,7 @@ from great_expectations.datasource.data_connector import (
 from great_expectations.execution_engine import PandasExecutionEngine
 from tests.test_utils import create_files_in_directory
 
-yaml = YAML()
+yaml = YAML(typ="safe")
 
 
 def test_basic_instantiation(tmp_path_factory):

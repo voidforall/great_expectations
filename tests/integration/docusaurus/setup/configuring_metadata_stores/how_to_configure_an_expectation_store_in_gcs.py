@@ -7,6 +7,9 @@ import great_expectations as ge
 
 context = ge.get_context()
 
+yaml = YAML(typ="safe")
+
+
 # NOTE: The following code is only for testing and depends on an environment
 # variable to set the gcp_project. You can replace the value with your own
 # GCP project information
@@ -21,7 +24,7 @@ great_expectations_yaml_file_path = os.path.join(
     context.root_directory, "great_expectations.yml"
 )
 with open(great_expectations_yaml_file_path) as f:
-    great_expectations_yaml = yaml.safe_load(f)
+    great_expectations_yaml = yaml.load(f)
 
 stores = great_expectations_yaml["stores"]
 pop_stores = ["checkpoint_store", "evaluation_parameter_store", "validations_store"]
@@ -45,7 +48,7 @@ stores:
 expectations_store_name: expectations_store
 """
 
-assert actual_existing_expectations_store == yaml.safe_load(
+assert actual_existing_expectations_store == yaml.load(
     expected_existing_expectations_store_yaml
 )
 
@@ -63,7 +66,7 @@ expectations_store_name: expectations_GCS_store
 """
 
 # replace example code with integration test configuration
-configured_expectations_store = yaml.safe_load(configured_expectations_store_yaml)
+configured_expectations_store = yaml.load(configured_expectations_store_yaml)
 configured_expectations_store["stores"]["expectations_GCS_store"]["store_backend"][
     "project"
 ] = gcp_project
@@ -90,7 +93,7 @@ context.add_store(
     store_config=configured_expectations_store["stores"]["expectations_GCS_store"],
 )
 with open(great_expectations_yaml_file_path) as f:
-    great_expectations_yaml = yaml.safe_load(f)
+    great_expectations_yaml = yaml.load(f)
 great_expectations_yaml["expectations_store_name"] = "expectations_GCS_store"
 great_expectations_yaml["stores"]["expectations_GCS_store"]["store_backend"].pop(
     "suppress_store_backend_id"

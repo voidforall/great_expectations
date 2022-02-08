@@ -22,7 +22,7 @@ from great_expectations.datasource.data_connector.inferred_asset_s3_data_connect
 )
 from great_expectations.execution_engine import PandasExecutionEngine
 
-yaml = YAML()
+yaml = YAML(typ="safe")
 
 
 @mock_s3

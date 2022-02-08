@@ -28,7 +28,7 @@ from great_expectations.validation_operators.types.validation_operator_result im
     ValidationOperatorResult,
 )
 
-yaml = YAML()
+yaml = YAML(typ="safe")
 
 logger = logging.getLogger(__name__)
 

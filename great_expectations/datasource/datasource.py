@@ -12,7 +12,7 @@ from great_expectations.data_context.util import (
 from great_expectations.exceptions import ClassInstantiationError
 
 logger = logging.getLogger(__name__)
-yaml = YAML()
+yaml = YAML(typ="safe")
 yaml.default_flow_style = False
 
 

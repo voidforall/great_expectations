@@ -33,7 +33,7 @@ from great_expectations.datasource.data_connector import (
 from great_expectations.datasource.new_datasource import Datasource
 from tests.test_utils import create_files_in_directory
 
-yaml = YAML()
+yaml = YAML(typ="safe")
 
 
 @pytest.fixture

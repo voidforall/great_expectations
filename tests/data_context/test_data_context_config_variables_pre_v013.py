@@ -16,7 +16,7 @@ from great_expectations.data_context.util import (
 from great_expectations.exceptions import InvalidConfigError, MissingConfigVariableError
 from tests.data_context.conftest import create_data_context_files
 
-yaml = YAML()
+yaml = YAML(typ="safe")
 yaml.indent(mapping=2, sequence=4, offset=2)
 yaml.default_flow_style = False
 

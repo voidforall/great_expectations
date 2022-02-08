@@ -20,7 +20,7 @@ from great_expectations.rule_based_profiler.rule_based_profiler import RuleBased
 from great_expectations.validator.metric_configuration import MetricConfiguration
 from great_expectations.validator.validator import Validator
 
-yaml = YAML()
+yaml = YAML(typ="safe")
 
 
 def test_alice_columnar_table_single_batch_batches_are_accessible(

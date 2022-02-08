@@ -11,7 +11,7 @@ from great_expectations.execution_engine.sqlalchemy_batch_data import (
 )
 from great_expectations.marshmallow__shade.exceptions import ValidationError
 
-yaml = YAML()
+yaml = YAML(typ="safe")
 
 try:
     sqlalchemy = pytest.importorskip("sqlalchemy")

@@ -8,7 +8,7 @@ from great_expectations.cli.v012 import cli
 from great_expectations.exceptions import ConfigNotFoundError
 from tests.cli.v012.utils import assert_no_logging_messages_or_tracebacks
 
-yaml = YAML()
+yaml = YAML(typ="safe")
 yaml.default_flow_style = False
 
 

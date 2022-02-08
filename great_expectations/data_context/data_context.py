@@ -135,7 +135,7 @@ except ImportError:
     SQLAlchemyError = ge_exceptions.ProfilerError
 
 logger = logging.getLogger(__name__)
-yaml = YAML()
+yaml = YAML(typ="safe")
 yaml.indent(mapping=2, sequence=4, offset=2)
 yaml.default_flow_style = False
 

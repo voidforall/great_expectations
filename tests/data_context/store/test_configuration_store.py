@@ -27,7 +27,7 @@ from tests.test_utils import (
     save_config_to_filesystem,
 )
 
-yaml = YAML()
+yaml = YAML(typ="safe")
 
 logger = logging.getLogger(__name__)
 

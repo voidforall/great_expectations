@@ -19,7 +19,7 @@ except ImportError:
     sqlalchemy = None
 
 
-yaml = YAML()
+yaml = YAML(typ="safe")
 
 
 def test_sqlalchemy_datasource_custom_data_asset(

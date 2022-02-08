@@ -6,7 +6,7 @@ from great_expectations.core.usage_statistics.anonymizers.datasource_anonymizer 
 )
 from great_expectations.datasource import PandasDatasource
 
-yaml = YAML()
+yaml = YAML(typ="safe")
 
 CONSISTENT_SALT: str = "00000000-0000-0000-0000-00000000a004"
 

@@ -29,7 +29,7 @@ try:
 except ImportError:
     sqlalchemy = None
 
-yaml = YAML()
+yaml = YAML(typ="safe")
 
 
 def test_basic_instantiation_with_ConfiguredAssetSqlDataConnector(sa):

@@ -21,7 +21,7 @@ from great_expectations.core.batch_spec import (
 from great_expectations.core.id_dict import IDDict
 from great_expectations.datasource.data_connector import RuntimeDataConnector
 
-yaml = YAML()
+yaml = YAML(typ="safe")
 
 
 def test_self_check(basic_datasource):

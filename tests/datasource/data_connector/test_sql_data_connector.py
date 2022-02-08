@@ -15,7 +15,7 @@ except ImportError:
     sqlalchemy = None
 from great_expectations.validator.validator import Validator
 
-yaml = YAML()
+yaml = YAML(typ="safe")
 
 
 # TODO: <Alex>ALEX -- Some methods in this module are misplaced and/or provide no action; this must be repaired.</Alex>

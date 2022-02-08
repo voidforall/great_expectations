@@ -15,7 +15,7 @@ from great_expectations.exceptions import BatchKwargsError
 from great_expectations.util import is_library_loadable
 from great_expectations.validator.validator import BridgeValidator, Validator
 
-yaml = YAML()
+yaml = YAML(typ="safe")
 
 
 @pytest.fixture(scope="module")

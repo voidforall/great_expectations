@@ -27,7 +27,7 @@ from great_expectations.data_context.util import (
 )
 from great_expectations.datasource.new_datasource import Datasource
 
-yaml = YAML()
+yaml = YAML(typ="safe")
 
 
 @pytest.fixture

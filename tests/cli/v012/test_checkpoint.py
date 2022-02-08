@@ -50,7 +50,7 @@ def titanic_data_context_v2_with_checkpoint_suite_and_stats_enabled(
     titanic_checkpoint,
     titanic_expectation_suite,
 ):
-    yaml = YAML()
+    yaml = YAML(typ="safe")
     context = titanic_data_context_stats_enabled_config_version_2
     context.save_expectation_suite(titanic_expectation_suite)
     # TODO context should save a Checkpoint
@@ -1097,6 +1097,6 @@ def test_checkpoint_script_happy_path_executable_failed_validation_with_ge_confi
 
 
 def _write_checkpoint_dict_to_file(bad, checkpoint_file_path):
-    yaml = YAML()
+    yaml = YAML(typ="safe")
     with open(checkpoint_file_path, "w") as f:
         yaml.dump(bad, f)

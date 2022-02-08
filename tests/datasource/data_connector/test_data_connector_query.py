@@ -10,7 +10,7 @@ from great_expectations.data_context.util import instantiate_class_from_config
 from great_expectations.datasource.data_connector import DataConnector
 from tests.test_utils import create_files_in_directory
 
-yaml = YAML()
+yaml = YAML(typ="safe")
 
 
 @pytest.fixture()

@@ -19,7 +19,7 @@ from great_expectations.datasource.types import PathBatchKwargs
 from great_expectations.exceptions import BatchKwargsError
 from great_expectations.validator.validator import BridgeValidator, Validator
 
-yaml = YAML()
+yaml = YAML(typ="safe")
 
 
 def test_standalone_pandas_datasource(test_folder_connection_path_csv):

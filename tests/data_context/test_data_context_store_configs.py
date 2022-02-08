@@ -5,7 +5,7 @@ from ruamel.yaml import YAML
 
 import great_expectations as ge
 
-yaml = YAML()
+yaml = YAML(typ="safe")
 yaml.default_flow_style = False
 
 

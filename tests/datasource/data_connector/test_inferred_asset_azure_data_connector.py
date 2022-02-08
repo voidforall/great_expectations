@@ -18,7 +18,7 @@ from great_expectations.execution_engine import (
     SparkDFExecutionEngine,
 )
 
-yaml = YAML()
+yaml = YAML(typ="safe")
 
 
 @pytest.fixture

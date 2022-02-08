@@ -33,7 +33,7 @@ from great_expectations.rule_based_profiler.types import (
 )
 from tests.conftest import skip_if_python_below_minimum_version
 
-yaml = YAML()
+yaml = YAML(typ="safe")
 
 
 # TODO: AJB 20210525 This fixture is not yet used but may be helpful to generate batches for unit tests of multibatch

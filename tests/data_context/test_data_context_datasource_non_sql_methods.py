@@ -10,7 +10,7 @@ from great_expectations.data_context.util import file_relative_path
 
 from ..test_utils import create_files_in_directory
 
-yaml = YAML()
+yaml = YAML(typ="safe")
 
 
 def test_get_batch_list_from_new_style_datasource_with_file_system_datasource_inferred_assets(

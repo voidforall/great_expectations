@@ -29,7 +29,7 @@ from great_expectations.datasource import (
 )
 from tests.cli.utils import assert_no_logging_messages_or_tracebacks
 
-yaml = YAML()
+yaml = YAML(typ="safe")
 yaml.indent(mapping=2, sequence=4, offset=2)
 yaml.default_flow_style = False
 
@@ -3917,6 +3917,6 @@ def test_checkpoint_script_happy_path_executable_failed_validation_due_to_bad_da
 
 
 def _write_checkpoint_dict_to_file(config, checkpoint_file_path):
-    yaml_obj: YAML = YAML()
+    yaml_obj: YAML = YAML(typ="safe")
     with open(checkpoint_file_path, "w") as f:
         yaml_obj.dump(config, f)

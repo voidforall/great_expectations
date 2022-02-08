@@ -15,7 +15,7 @@ from great_expectations.data_context.util import instantiate_class_from_config
 from great_expectations.datasource.data_connector import ConfiguredAssetGCSDataConnector
 from great_expectations.execution_engine import PandasExecutionEngine
 
-yaml = YAML()
+yaml = YAML(typ="safe")
 
 
 @pytest.fixture

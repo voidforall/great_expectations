@@ -15,7 +15,7 @@ from great_expectations.util import filter_properties_dict
 from great_expectations.validator.metric_configuration import MetricConfiguration
 
 logger = logging.getLogger(__name__)
-yaml = YAML()
+yaml = YAML(typ="safe")
 yaml.default_flow_style = False
 
 

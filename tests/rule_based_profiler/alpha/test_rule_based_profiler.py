@@ -11,7 +11,7 @@ from great_expectations.rule_based_profiler.config.base import (
 from great_expectations.rule_based_profiler.rule_based_profiler import RuleBasedProfiler
 from great_expectations.validator.metric_configuration import MetricConfiguration
 
-yaml = YAML()
+yaml = YAML(typ="safe")
 
 
 def test_batches_are_accessible(

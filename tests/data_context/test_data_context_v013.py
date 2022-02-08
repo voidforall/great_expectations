@@ -21,7 +21,7 @@ from tests.integration.usage_statistics.test_integration_usage_statistics import
 )
 from tests.test_utils import create_files_in_directory, get_sqlite_temp_table_names
 
-yaml = YAML()
+yaml = YAML(typ="safe")
 
 
 @pytest.fixture

@@ -232,7 +232,7 @@ def profiler_config():
            meta:
              profiler_details: $parameter.row_count_range.details
     """
-    yaml = YAML()
+    yaml = YAML(typ="safe")
     return yaml.load(yaml_config)
 
 

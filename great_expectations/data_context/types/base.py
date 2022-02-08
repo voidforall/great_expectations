@@ -29,7 +29,7 @@ from great_expectations.types.base import SerializableDotDict
 from great_expectations.types.configurations import ClassConfigSchema
 from great_expectations.util import deep_filter_properties_iterable
 
-yaml = YAML()
+yaml = YAML(typ="safe")
 yaml.indent(mapping=2, sequence=4, offset=2)
 
 logger = logging.getLogger(__name__)

@@ -11,7 +11,7 @@ from great_expectations import __version__ as ge_version
 from great_expectations.cli import cli
 from tests.cli.utils import assert_no_logging_messages_or_tracebacks
 
-yaml = YAML()
+yaml = YAML(typ="safe")
 yaml.default_flow_style = False
 
 

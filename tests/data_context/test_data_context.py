@@ -48,7 +48,7 @@ try:
 except ImportError:
     from unittest import mock
 
-yaml = YAML()
+yaml = YAML(typ="safe")
 
 parameterized_expectation_suite_name = "my_dag_node.default"
 
