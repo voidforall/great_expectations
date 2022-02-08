@@ -16,7 +16,7 @@ with open(great_expectations_yaml_file_path) as f:
 actual_datasource = great_expectations_yaml["datasources"]
 
 # expected Datasource
-expected_existing_datasource_yaml = """
+expected_existing_datasource_yaml = r"""
   my_datasource:
     class_name: SparkDFDatasource
     module_name: great_expectations.datasource
@@ -75,7 +75,7 @@ class_name: LegacyCheckpoint
 validation_operator_name: action_list_operator
 batches:
   - batch_kwargs:
-      path: ../../data/Titanic.csv
+      path: ../../../data/Titanic.csv
       datasource: my_datasource
       data_asset_name: Titanic.csv
       reader_options:
