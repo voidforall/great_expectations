@@ -199,7 +199,7 @@ class SqlAlchemyBatchData(BatchData):
         :param query:
         """
         if self.sql_engine_dialect.name.lower() == "bigquery":
-            stmt = "CREATE OR REPLACE TABLE `{temp_table_name}` AS {query}".format(
+            stmt = "CREATE OR REPLACE TEMP TABLE `{temp_table_name}` AS {query}".format(
                 temp_table_name=temp_table_name, query=query
             )
         elif self.sql_engine_dialect.name.lower() == "dremio":
