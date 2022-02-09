@@ -1,6 +1,8 @@
 import pyspark
 from ruamel import yaml
 
+yaml = yaml.YAML(typ="safe")
+
 import great_expectations as ge
 from great_expectations import DataContext
 from great_expectations.core import ExpectationSuite

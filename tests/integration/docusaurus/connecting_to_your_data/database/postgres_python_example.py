@@ -1,5 +1,7 @@
 from ruamel import yaml
 
+yaml = yaml.YAML(typ="safe")
+
 import great_expectations as ge
 from great_expectations.core.batch import BatchRequest, RuntimeBatchRequest
 from tests.test_utils import load_data_into_test_database

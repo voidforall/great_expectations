@@ -2,6 +2,8 @@ import os
 
 from ruamel import yaml
 
+yaml = yaml.YAML(typ="safe")
+
 import great_expectations as ge
 from great_expectations.data_context.util import file_relative_path
 

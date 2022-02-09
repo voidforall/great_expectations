@@ -2,6 +2,8 @@ import os
 
 from ruamel import yaml
 
+yaml = yaml.YAML(typ="safe")
+
 from great_expectations.core.batch import BatchRequest
 from great_expectations.data_context import BaseDataContext
 from great_expectations.data_context.types.base import (

@@ -5,6 +5,8 @@ import datetime
 import pandas as pd
 from ruamel import yaml
 
+yaml = yaml.YAML(typ="safe")
+
 from great_expectations.core.batch import RuntimeBatchRequest
 from great_expectations.data_context import BaseDataContext
 from great_expectations.data_context.types.base import (
