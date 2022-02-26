@@ -25,6 +25,7 @@ repos:
     hooks:
       - id: flake8
         files: ^(great_expectations/core)
+        additional_dependencies: ['flake8-annotations']
   - repo: https://github.com/asottile/pyupgrade
     rev: v2.7.2
     hooks:
