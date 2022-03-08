@@ -233,8 +233,31 @@ def build_parameter_container_for_variables(
     build_parameter_container(
         parameter_container=parameter_container, parameter_values=parameter_values
     )
-
     return parameter_container
+
+
+def update_parameter_container_for_variables(
+    variables_configs: Dict[str, Any], existing_container: ParameterContainer
+) -> ParameterContainer:
+    """
+    Update ParameterContainer
+    Args:
+        variables_configs ():
+        existing_container ():
+
+    Returns:
+    """
+    variable_config_key: str
+    variable_config_value: Any
+    parameter_values: Dict[str, Any] = {}
+    for variable_config_key, variable_config_value in variables_configs.items():
+        variable_config_key = f"{VARIABLES_KEY}{variable_config_key}"
+        parameter_values[variable_config_key] = variable_config_value
+    build_parameter_container(
+        parameter_container=existing_container, parameter_values=parameter_values
+    )
+    updated_container: ParameterContainer = existing_container
+    return updated_container
 
 
 def build_parameter_container(

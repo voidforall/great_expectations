@@ -1,5 +1,6 @@
 import copy
 import json
+import logging
 from typing import Dict, List, Optional
 
 from great_expectations.core import ExpectationConfiguration
@@ -17,6 +18,9 @@ from great_expectations.rule_based_profiler.parameter_builder import ParameterBu
 from great_expectations.rule_based_profiler.types import Domain, ParameterContainer
 from great_expectations.types import SerializableDictDot
 from great_expectations.util import deep_filter_properties_iterable
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 
 class Rule(SerializableDictDot):
@@ -64,14 +68,14 @@ class Rule(SerializableDictDot):
             )
             self._parameters[domain.id] = parameter_container
             parameter_builder: ParameterBuilder
-            for parameter_builder in self._parameter_builders:
-                parameter_builder.build_parameters(
-                    parameter_container=parameter_container,
-                    domain=domain,
-                    variables=variables,
-                    parameters=self.parameters,
-                )
-
+            if self._parameter_builders is not None:
+                for parameter_builder in self._parameter_builders:
+                    parameter_builder.build_parameters(
+                        parameter_container=parameter_container,
+                        domain=domain,
+                        variables=variables,
+                        parameters=self.parameters,
+                    )
             expectation_configuration_builder: ExpectationConfigurationBuilder
             for (
                 expectation_configuration_builder

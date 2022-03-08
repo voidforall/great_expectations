@@ -47,6 +47,9 @@ from great_expectations.rule_based_profiler.types import (
     ParameterContainer,
     build_parameter_container_for_variables,
 )
+from great_expectations.rule_based_profiler.types.parameter_container import (
+    update_parameter_container_for_variables,
+)
 from great_expectations.types import SerializableDictDot
 from great_expectations.util import filter_properties_dict
 
@@ -146,13 +149,23 @@ class BaseRuleBasedProfiler(ConfigPeer):
             variables = {}
 
         # Necessary to annotate ExpectationSuite during `run()`
-        self._citation = {
-            "name": name,
-            "config_version": config_version,
-            "variables": variables,
-            "rules": rules,
-        }
 
+        # self._citation = self._initialize_citations(name, config_version, variables, rules)
+        if isinstance(rules, dict) or rules is None:
+            self._citation = {
+                "name": name,
+                "config_version": config_version,
+                "variables": variables,
+                "rules": rules,
+            }
+        # do we keep this path in here?
+        elif isinstance(rules, Rule):
+            self._citation = {
+                "name": name,
+                "config_version": config_version,
+                "variables": variables,
+                "rules": rules.to_json_dict(),
+            }
         # Convert variables argument to ParameterContainer
         _variables: ParameterContainer = build_parameter_container_for_variables(
             variables_configs=variables
@@ -160,7 +173,6 @@ class BaseRuleBasedProfiler(ConfigPeer):
         self._variables = _variables
 
         self._data_context = data_context
-
         self._rules = self._init_profiler_rules(rules=rules)
 
     def _init_profiler_rules(
@@ -400,7 +412,7 @@ class BaseRuleBasedProfiler(ConfigPeer):
     ) -> dict:
         if variables is None:
             variables = {}
-
+        # <Add rule needs to update variable>
         variables_configs: dict = (
             self.variables.to_dict()["parameter_nodes"]["variables"]["variables"] or {}
         )
@@ -812,13 +824,16 @@ class BaseRuleBasedProfiler(ConfigPeer):
 
     def to_json_dict(self) -> dict:
         rule: Rule
+
+        variables_dict: dict = self.variables.to_dict()
+        if variables_dict["parameter_nodes"] is not None:
+            variables_dict = variables_dict["parameter_nodes"]["variables"]["variables"]
+
         serializeable_dict: dict = {
             "class_name": self.__class__.__name__,
             "module_name": self.__class__.__module__,
             "name": self.name,
-            "variables": self.variables.to_dict()["parameter_nodes"]["variables"][
-                "variables"
-            ],
+            "variables": variables_dict,
             "rules": [rule.to_json_dict() for rule in self.rules],
         }
         return serializeable_dict
@@ -927,6 +942,13 @@ class RuleBasedProfiler(BaseRuleBasedProfiler):
             variables: Any variables to be substituted within the rules
             data_context: DataContext object that defines a full runtime environment (data access, etc.)
         """
+        ######### I can update the profiler_config. keey updating this.
+        ### if you are adding a rule :
+        ### if you are adding a variable : look at how variable reconciliation is done here. or in validator.
+        # this checks if the rule they are adding is a rule that exists.
+        # base data context there is going to be an update config ..
+        # decide there would.
+        # fresh new...
         profiler_config: RuleBasedProfilerConfig = RuleBasedProfilerConfig(
             name=name,
             config_version=config_version,
@@ -938,6 +960,31 @@ class RuleBasedProfiler(BaseRuleBasedProfiler):
             profiler_config=profiler_config,
             data_context=data_context,
         )
+
+    def save_config(self):
+        """
+        Contains the logic for saving the config
+        Returns:
+            whether the update to config was successful or not.
+        """
+        # reconcile
+        #
+        # and save config?
+        # rules_dict: dict = rule.to_json_dict()
+        # .append(rules_dict)
+        rules: List[Rule] = self.rules
+        resulting_rules: Dict[str, Dict[str, Any]] = {}
+        rule: Rule
+        for rule in rules:
+            resulting_rules[rule.name] = rule.to_dict()
+
+        profiler_config: RuleBasedProfilerConfig = RuleBasedProfilerConfig(
+            name=self.name,
+            config_version=self._config_version,
+            variables=self.variables,
+            rules=resulting_rules,
+        )
+        self._profiler_config = profiler_config
 
     @staticmethod
     def run_profiler(
@@ -996,6 +1043,28 @@ class RuleBasedProfiler(BaseRuleBasedProfiler):
             include_citation=include_citation,
         )
         return result
+
+    def add_rule(
+        self,
+        rule: Rule,
+    ) -> None:
+        # if we add a rule with the same name, then we over-write it.
+        for index in range(len(self._rules)):
+            existing_rule: Rule = self.rules[index]
+            if existing_rule.name == rule.name:
+                self._rules.pop(index)
+        self._rules.append(rule)
+
+    def add_variables(self, variables: Dict[str, Any]) -> None:
+        # does container exist?
+        existing_container: ParameterContainer = self.variables
+        # we are adding this to the parameters section
+        updated_variables: ParameterContainer = (
+            update_parameter_container_for_variables(
+                variables_configs=variables, existing_container=existing_container
+            )
+        )
+        self._variables = updated_variables
 
     def _generate_rule_overrides_from_batch_request(
         self,
