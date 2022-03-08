@@ -80,16 +80,6 @@ def test_domain_builder(data_context_with_taxi_data):
     ]
 
 
-def test_expectation_configuration_builder(data_context_with_taxi_data):
-    # this is where you can really see the value of the RBP because you can calculate these values automatically
-    default_expectation_configuration_builder = DefaultExpectationConfigurationBuilder(
-        expectation_type="expect_column_values_to_not_be_null",
-        column="total_amount",
-    )
-    # so this needs to be tested a bit better than before
-    pass
-
-
 def test_rule_workflow_add_rule(data_context_with_taxi_data):
     context: ge.DataContext = data_context_with_taxi_data
     batch_request: BatchRequest = BatchRequest(
@@ -116,132 +106,6 @@ def test_rule_workflow_add_rule(data_context_with_taxi_data):
     my_rbp: RuleBasedProfiler = RuleBasedProfiler(
         name="my_rbp", data_context=context, config_version=1.0
     )
-    my_rbp.add_rule(rule=simple_variables_rule)
-    res: ExpectationSuite = my_rbp.run()
-    assert len(res.expectations) == 4
-
-
-def test_add_rule_with_parameter_builder(data_context_with_taxi_data):
-    context: ge.DataContext = data_context_with_taxi_data
-    batch_request: BatchRequest = BatchRequest(
-        datasource_name="taxi_multibatch_datasource_other_possibility",
-        data_connector_name="default_inferred_data_connector_name",
-        data_asset_name="yellow_tripdata_sample_2018",
-        data_connector_query={"index": -1},
-    )
-    domain_builder: DomainBuilder = SimpleColumnSuffixDomainBuilder(
-        data_context=context,
-        batch_request=batch_request,
-        column_name_suffixes=["_amount"],
-    )
-    # parameter_builder
-    numeric_range_parameter_builder: MetricMultiBatchParameterBuilder = (
-        MetricMultiBatchParameterBuilder(
-            data_context=context,
-            batch_request=batch_request,
-            metric_name="column.min",
-            metric_domain_kwargs="$domain.domain_kwargs",
-            name="my_column_min",
-        )
-    )
-
-    config_builder: DefaultExpectationConfigurationBuilder = (
-        DefaultExpectationConfigurationBuilder(
-            expectation_type="expect_column_values_to_be_greater_than",
-            value="$parameter.my_column_min.value[-1]",
-            column="$domain.domain_kwargs.column",
-        )
-    )
-    simple_variables_rule: Rule = Rule(
-        name="rule_with_no_variables_no_parameters",
-        domain_builder=domain_builder,
-        parameter_builders=[numeric_range_parameter_builder],
-        expectation_configuration_builders=[config_builder],
-    )
-    my_rbp = RuleBasedProfiler(name="my_rbp", data_context=context, config_version=1.0)
-    my_rbp.add_rule(rule=simple_variables_rule)
-    res: ExpectationSuite = my_rbp.run()
-    assert len(res.expectations) == 4
-
-
-def test_add_variables(data_context_with_taxi_data):
-    context: ge.DataContext = data_context_with_taxi_data
-    batch_request: BatchRequest = BatchRequest(
-        datasource_name="taxi_multibatch_datasource_other_possibility",
-        data_connector_name="default_inferred_data_connector_name",
-        data_asset_name="yellow_tripdata_sample_2018",
-        data_connector_query={"index": -1},
-    )
-    domain_builder: DomainBuilder = SimpleColumnSuffixDomainBuilder(
-        data_context=context,
-        batch_request=batch_request,
-        column_name_suffixes=["_amount"],
-    )
-    default_expectation_configuration_builder = DefaultExpectationConfigurationBuilder(
-        expectation_type="expect_column_values_to_not_be_null",
-        column="$domain.domain_kwargs.column",
-    )
-    simple_variables_rule: Rule = Rule(
-        name="rule_with_parameters",
-        domain_builder=domain_builder,
-        expectation_configuration_builders=[default_expectation_configuration_builder],
-    )
-    # all of this is correct until this point.
-    my_rbp: RuleBasedProfiler = RuleBasedProfiler(
-        name="my_rbp", data_context=context, config_version=1.0
-    )
-    my_rbp.add_rule(rule=simple_variables_rule)
-    res: ExpectationSuite = my_rbp.run()
-    assert len(res.expectations) == 4
-
-    # now adding parameter
-
-
-def test_add_variables_currently_not_working(data_context_with_taxi_data):
-    # how do variables work?
-    # well we can update the config?
-    context: ge.DataContext = data_context_with_taxi_data
-    batch_request: BatchRequest = BatchRequest(
-        datasource_name="taxi_multibatch_datasource_other_possibility",
-        data_connector_name="default_inferred_data_connector_name",
-        data_asset_name="yellow_tripdata_sample_2018",
-        data_connector_query={"index": -1},
-    )
-    # create a new RBP
-    variables: Optional[Dict[str, Any]] = {"suffix": "_amount"}
-
-    my_rbp = RuleBasedProfiler(
-        name="my_rbp", data_context=context, config_version=1.0, variables=variables
-    )
-    domain_builder: DomainBuilder = SimpleColumnSuffixDomainBuilder(
-        data_context=context,
-        batch_request=batch_request,
-        column_name_suffixes="$variables.suffix",
-    )
-    # parameter_builder
-    numeric_range_parameter_builder: MetricMultiBatchParameterBuilder = (
-        MetricMultiBatchParameterBuilder(
-            data_context=context,
-            batch_request=batch_request,
-            metric_name="column.min",
-            metric_domain_kwargs="$domain.domain_kwargs",
-            name="my_column_min",
-        )
-    )
-    config_builder: DefaultExpectationConfigurationBuilder = (
-        DefaultExpectationConfigurationBuilder(
-            expectation_type="expect_column_values_to_be_greater_than",
-            value="$parameter.my_column_min.value[-1]",
-            column="$domain.domain_kwargs.column",
-        )
-    )
-    simple_variables_rule: Rule = Rule(
-        name="rule_with_no_variables_no_parameters",
-        domain_builder=domain_builder,
-        parameter_builders=[numeric_range_parameter_builder],
-        expectation_configuration_builders=[config_builder],
-    )
-    # do we need to update if the name is already in there?
     my_rbp.add_rule(rule=simple_variables_rule)
     res: ExpectationSuite = my_rbp.run()
     assert len(res.expectations) == 4
@@ -354,8 +218,6 @@ def test_rule_work_flow_with_save(data_context_with_taxi_data):
 
 
 def test_with_multi_batch_quentin_workflow(data_context_with_taxi_data):
-
-    #### NOTE : use the RECONCILIATION path to update the config.
     context: ge.DataContext = data_context_with_taxi_data
     batch_request: BatchRequest = BatchRequest(
         datasource_name="taxi_multibatch_datasource_other_possibility",
@@ -407,6 +269,161 @@ def test_with_multi_batch_quentin_workflow(data_context_with_taxi_data):
     res = my_rbp.run()
     print(res)
     print("this worked my friends")
+
+
+#   `# this is how interact with ExpectatiSuite
+#     data_context_with_taxi_data.create_expectation_suite()
+#     #adding to suite
+#     validator.expecvtA
+#     validator.expectB
+#     data_context_with_taxi_data.save_expectation_suite(??)
+#
+# `# profiler: `
+#     ??????
+#     add rules
+#     add test_rule_work_flow_with_save(
+#     data_context_with_taxi_data.save_profiler()
+# )
+
+# what happens to add_prfofiler
+
+
+def test_expectation_configuration_builder(data_context_with_taxi_data):
+    # this is where you can really see the value of the RBP because you can calculate these values automatically
+    default_expectation_configuration_builder = DefaultExpectationConfigurationBuilder(
+        expectation_type="expect_column_values_to_not_be_null",
+        column="total_amount",
+    )
+    # so this needs to be tested a bit better than before
+    pass
+
+
+def test_add_rule_with_parameter_builder(data_context_with_taxi_data):
+    context: ge.DataContext = data_context_with_taxi_data
+    batch_request: BatchRequest = BatchRequest(
+        datasource_name="taxi_multibatch_datasource_other_possibility",
+        data_connector_name="default_inferred_data_connector_name",
+        data_asset_name="yellow_tripdata_sample_2018",
+        data_connector_query={"index": -1},
+    )
+    domain_builder: DomainBuilder = SimpleColumnSuffixDomainBuilder(
+        data_context=context,
+        batch_request=batch_request,
+        column_name_suffixes=["_amount"],
+    )
+    # parameter_builder
+    numeric_range_parameter_builder: MetricMultiBatchParameterBuilder = (
+        MetricMultiBatchParameterBuilder(
+            data_context=context,
+            batch_request=batch_request,
+            metric_name="column.min",
+            metric_domain_kwargs="$domain.domain_kwargs",
+            name="my_column_min",
+        )
+    )
+
+    config_builder: DefaultExpectationConfigurationBuilder = (
+        DefaultExpectationConfigurationBuilder(
+            expectation_type="expect_column_values_to_be_greater_than",
+            value="$parameter.my_column_min.value[-1]",
+            column="$domain.domain_kwargs.column",
+        )
+    )
+    simple_variables_rule: Rule = Rule(
+        name="rule_with_no_variables_no_parameters",
+        domain_builder=domain_builder,
+        parameter_builders=[numeric_range_parameter_builder],
+        expectation_configuration_builders=[config_builder],
+    )
+    my_rbp = RuleBasedProfiler(name="my_rbp", data_context=context, config_version=1.0)
+    my_rbp.add_rule(rule=simple_variables_rule)
+    res: ExpectationSuite = my_rbp.run()
+    assert len(res.expectations) == 4
+
+
+def test_add_variables(data_context_with_taxi_data):
+    context: ge.DataContext = data_context_with_taxi_data
+    batch_request: BatchRequest = BatchRequest(
+        datasource_name="taxi_multibatch_datasource_other_possibility",
+        data_connector_name="default_inferred_data_connector_name",
+        data_asset_name="yellow_tripdata_sample_2018",
+        data_connector_query={"index": -1},
+    )
+    domain_builder: DomainBuilder = SimpleColumnSuffixDomainBuilder(
+        data_context=context,
+        batch_request=batch_request,
+        column_name_suffixes=["_amount"],
+    )
+    default_expectation_configuration_builder = DefaultExpectationConfigurationBuilder(
+        expectation_type="expect_column_values_to_not_be_null",
+        column="$domain.domain_kwargs.column",
+    )
+    simple_variables_rule: Rule = Rule(
+        name="rule_with_parameters",
+        domain_builder=domain_builder,
+        expectation_configuration_builders=[default_expectation_configuration_builder],
+    )
+    # all of this is correct until this point.
+    my_rbp: RuleBasedProfiler = RuleBasedProfiler(
+        name="my_rbp", data_context=context, config_version=1.0
+    )
+    my_rbp.add_rule(rule=simple_variables_rule)
+    res: ExpectationSuite = my_rbp.run()
+    assert len(res.expectations) == 4
+
+    # now adding parameter
+
+
+def add_variables_currently_not_working(data_context_with_taxi_data):
+    # how do variables work?
+    # well we can update the config?
+    # applies rules iwth defaults... reconciles it.
+    #
+    context: ge.DataContext = data_context_with_taxi_data
+    batch_request: BatchRequest = BatchRequest(
+        datasource_name="taxi_multibatch_datasource_other_possibility",
+        data_connector_name="default_inferred_data_connector_name",
+        data_asset_name="yellow_tripdata_sample_2018",
+        data_connector_query={"index": -1},
+    )
+    # create a new RBP
+    variables: Optional[Dict[str, Any]] = {"suffix": "_amount"}
+
+    my_rbp = RuleBasedProfiler(
+        name="my_rbp", data_context=context, config_version=1.0, variables=variables
+    )
+    domain_builder: DomainBuilder = SimpleColumnSuffixDomainBuilder(
+        data_context=context,
+        batch_request=batch_request,
+        column_name_suffixes="$variables.suffix",
+    )
+    # parameter_builder
+    numeric_range_parameter_builder: MetricMultiBatchParameterBuilder = (
+        MetricMultiBatchParameterBuilder(
+            data_context=context,
+            batch_request=batch_request,
+            metric_name="column.min",
+            metric_domain_kwargs="$domain.domain_kwargs",
+            name="my_column_min",
+        )
+    )
+    config_builder: DefaultExpectationConfigurationBuilder = (
+        DefaultExpectationConfigurationBuilder(
+            expectation_type="expect_column_values_to_be_greater_than",
+            value="$parameter.my_column_min.value[-1]",
+            column="$domain.domain_kwargs.column",
+        )
+    )
+    simple_variables_rule: Rule = Rule(
+        name="rule_with_no_variables_no_parameters",
+        domain_builder=domain_builder,
+        parameter_builders=[numeric_range_parameter_builder],
+        expectation_configuration_builders=[config_builder],
+    )
+    # do we need to update if the name is already in there?
+    my_rbp.add_rule(rule=simple_variables_rule)
+    res: ExpectationSuite = my_rbp.run()
+    assert len(res.expectations) == 4
 
 
 def test_with_add_parameter(data_context_with_taxi_data):

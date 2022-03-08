@@ -149,23 +149,19 @@ class BaseRuleBasedProfiler(ConfigPeer):
             variables = {}
 
         # Necessary to annotate ExpectationSuite during `run()`
+        rule_to_load_into_dictation: dict = {}
+        if isinstance(rules, Rule):
+            rule_to_load_into_citation = rules.to_json_dict()
+        elif isinstance(rules, dict):
+            rule_to_load_into_citation = rules
 
-        # self._citation = self._initialize_citations(name, config_version, variables, rules)
-        if isinstance(rules, dict) or rules is None:
-            self._citation = {
-                "name": name,
-                "config_version": config_version,
-                "variables": variables,
-                "rules": rules,
-            }
-        # do we keep this path in here?
-        elif isinstance(rules, Rule):
-            self._citation = {
-                "name": name,
-                "config_version": config_version,
-                "variables": variables,
-                "rules": rules.to_json_dict(),
-            }
+        self._citation = {
+            "name": name,
+            "config_version": config_version,
+            "variables": variables,
+            "rules": rule_to_load_into_citation,
+        }
+
         # Convert variables argument to ParameterContainer
         _variables: ParameterContainer = build_parameter_container_for_variables(
             variables_configs=variables
@@ -824,10 +820,13 @@ class BaseRuleBasedProfiler(ConfigPeer):
 
     def to_json_dict(self) -> dict:
         rule: Rule
-
-        variables_dict: dict = self.variables.to_dict()
-        if variables_dict["parameter_nodes"] is not None:
-            variables_dict = variables_dict["parameter_nodes"]["variables"]["variables"]
+        variables_dict: dict = {}
+        if self.variables and isinstance(self.variables, ParameterContainer):
+            variables_dict = self.variables.to_dict()
+            if variables_dict.get("parameter_nodes"):
+                variables_dict = variables_dict["parameter_nodes"]["variables"][
+                    "variables"
+                ]
 
         serializeable_dict: dict = {
             "class_name": self.__class__.__name__,

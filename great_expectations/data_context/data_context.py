@@ -3294,7 +3294,8 @@ Generated, evaluated, and stored %d Expectations during profiling. Please review
         # Roundtrip through schema validation to remove any illegal fields add/or restore any missing fields.
         validated_config: dict = ruleBasedProfilerConfigSchema.load(config_data)
         profiler_config: dict = ruleBasedProfilerConfigSchema.dump(validated_config)
-
+        # how do you instantiate a RBp from memory?
+        #
         config: RuleBasedProfilerConfig = RuleBasedProfilerConfig(**profiler_config)
 
         return RuleBasedProfiler.add_profiler(
@@ -3303,6 +3304,13 @@ Generated, evaluated, and stored %d Expectations during profiling. Please review
             profiler_store=self.profiler_store,
             ge_cloud_id=ge_cloud_id,
         )
+
+    def save_profiler(
+        self,
+        name: str,
+        config_version: float,
+    ):
+        pass
 
     def get_profiler(
         self,

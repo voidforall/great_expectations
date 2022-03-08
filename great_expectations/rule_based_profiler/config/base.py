@@ -399,6 +399,7 @@ class RuleBasedProfilerConfig(BaseYamlConfig):
         """
         return self.__repr__()
 
+    # USE ME INSTEAD!
     @classmethod
     def resolve_config_using_acceptable_arguments(
         cls,
